@@ -6,34 +6,45 @@ import org.bukkit.command.CommandSender;
 
 public class CombatCommand implements CommandExecutor {
 
+    private final Combatlogout plugin;
     private final CombatManager manager;
 
-    public CombatCommand(CombatManager manager) {
+    public CombatCommand(
+            Combatlogout plugin,
+            CombatManager manager
+    ) {
+        this.plugin = plugin;
         this.manager = manager;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender,
-                             Command command,
-                             String label,
-                             String[] args) {
+    public boolean onCommand(
+            CommandSender sender,
+            Command command,
+            String label,
+            String[] args
+    ) {
 
-        if (args.length != 1) {
-            sender.sendMessage("§c/combatlog <sekunden>");
+        if (args.length == 1 &&
+                args[0].equalsIgnoreCase("reload")) {
+
+            plugin.reloadConfig();
+
+            manager.setCombatTime(
+                    plugin.getConfig()
+                            .getInt("combat-time", 15)
+            );
+
+            sender.sendMessage(
+                    "§aCombatLogout neu geladen."
+            );
+
             return true;
         }
 
-        try {
-            int seconds = Integer.parseInt(args[0]);
-
-            manager.setCombatTime(seconds);
-            sender.sendMessage(
-                    "§aCombat-Zeit auf §e" + seconds + " Sekunden §agesetzt."
-            );
-
-        } catch (NumberFormatException e) {
-            sender.sendMessage("§cBitte eine Zahl eingeben.");
-        }
+        sender.sendMessage(
+                "§c/combatlog reload"
+        );
 
         return true;
     }

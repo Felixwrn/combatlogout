@@ -10,9 +10,17 @@ public final class Combatlogout extends JavaPlugin {
     public void onEnable() {
 
         combatManager = new CombatManager(this);
+        saveDefaultConfig();
+
+        combatManager = new CombatManager(this);
 
         getServer().getPluginManager().registerEvents(
                 new CombatListener(combatManager),
+                this
+        );
+
+        getServer().getPluginManager().registerEvents(
+                new TridentListener(combatManager),
                 this
         );
 
@@ -21,7 +29,24 @@ public final class Combatlogout extends JavaPlugin {
                 this
         );
 
-        getCommand("combatlog").setExecutor(new CombatCommand(combatManager));
+        getServer().getPluginManager().registerEvents(
+                new CommandListener(combatManager),
+                this
+        );
+
+        getServer().getPluginManager().registerEvents(
+                new TeleportListener(combatManager),
+                this
+        );
+
+        getServer().getPluginManager().registerEvents(
+                new PearlListener(combatManager),
+                this
+        );
+
+        getCommand("combatlog").setExecutor(
+                new CombatCommand(this, combatManager)
+        );
     }
 
     @Override

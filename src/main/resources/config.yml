@@ -1,0 +1,15 @@
+combat-time: 15
+
+bossbar:
+  title: "&cIm Kampf &7| &f%time%s"
+  color: RED
+  style: SOLID
+
+messages:
+  logout: "&c%player% hat sich während eines Kampfes ausgeloggt!"
+
+sounds:
+  enabled: true
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  volume: 1.0
+  pitch: 1.0
