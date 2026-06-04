@@ -1,0 +1,12 @@
+name: CombatLogout
+version: 1.0
+main: de.wrn.combatlogout.Combatlogout
+api-version: '1.21'
+
+commands:
+  combatlog:
+    permission: combatlog.admin
+
+permissions:
+  combatlog.admin:
+    default: op
