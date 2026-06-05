@@ -17,10 +17,12 @@ public class CombatManager {
     private final Map<UUID, Long> combatPlayers = new HashMap<>();
     private final Map<UUID, BossBar> bossBars = new HashMap<>();
 
-    private int combatTime = 15;
+    private int combatTime;
 
     public CombatManager(Combatlogout plugin) {
+
         this.plugin = plugin;
+        this.combatTime = plugin.getConfig().getInt("combat-time", 15);
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 
@@ -56,12 +58,27 @@ public class CombatManager {
 
                     double progress = remainingSeconds / combatTime;
 
-                    bar.setProgress(Math.max(0.0, Math.min(1.0, progress)));
+                    bar.setProgress(
+                            Math.max(
+                                    0.0,
+                                    Math.min(1.0, progress)
+                            )
+                    );
+
+                    String title = plugin.getConfig().getString(
+                            "bossbar.title",
+                            "&cIn Combat &7| &f%time%s"
+                    );
+
+                    title = title.replace(
+                            "%time%",
+                            String.valueOf(
+                                    (int) Math.ceil(remainingSeconds)
+                            )
+                    );
 
                     bar.setTitle(
-                            "§cIm Kampf §7| §f"
-                                    + Math.ceil(remainingSeconds)
-                                    + "s"
+                            title.replace("&", "§")
                     );
                 }
             }
@@ -86,10 +103,39 @@ public class CombatManager {
 
         if (bar == null) {
 
+            BarColor color;
+            BarStyle style;
+
+            try {
+                color = BarColor.valueOf(
+                        plugin.getConfig()
+                                .getString(
+                                        "bossbar.color",
+                                        "RED"
+                                )
+                                .toUpperCase()
+                );
+            } catch (Exception e) {
+                color = BarColor.RED;
+            }
+
+            try {
+                style = BarStyle.valueOf(
+                        plugin.getConfig()
+                                .getString(
+                                        "bossbar.style",
+                                        "SOLID"
+                                )
+                                .toUpperCase()
+                );
+            } catch (Exception e) {
+                style = BarStyle.SOLID;
+            }
+
             bar = Bukkit.createBossBar(
-                    "§cIm Kampf",
-                    BarColor.RED,
-                    BarStyle.SOLID
+                    "",
+                    color,
+                    style
             );
 
             bar.addPlayer(player);
@@ -125,6 +171,10 @@ public class CombatManager {
         }
 
         return true;
+    }
+
+    public Combatlogout getPlugin() {
+        return plugin;
     }
 
     public int getCombatTime() {

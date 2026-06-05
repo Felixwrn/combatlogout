@@ -1,6 +1,7 @@
 package de.wrn.combatlogout;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,8 +28,7 @@ public class TridentListener implements Listener {
             return;
         }
 
-        if (!item.containsEnchantment(
-                org.bukkit.enchantments.Enchantment.RIPTIDE)) {
+        if (!item.containsEnchantment(Enchantment.RIPTIDE)) {
             return;
         }
 
@@ -38,8 +38,15 @@ public class TridentListener implements Listener {
 
         event.setCancelled(true);
 
+        String message = manager.getPlugin()
+                .getConfig()
+                .getString(
+                        "messages.riptide-blocked",
+                        "&cYou cannot use Riptide while in combat."
+                );
+
         event.getPlayer().sendMessage(
-                "§cDu kannst Sog während eines Kampfes nicht benutzen."
+                message.replace("&", "§")
         );
     }
 }

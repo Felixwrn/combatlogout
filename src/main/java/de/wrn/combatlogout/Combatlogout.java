@@ -9,18 +9,12 @@ public final class Combatlogout extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        combatManager = new CombatManager(this);
         saveDefaultConfig();
 
         combatManager = new CombatManager(this);
 
         getServer().getPluginManager().registerEvents(
                 new CombatListener(combatManager),
-                this
-        );
-
-        getServer().getPluginManager().registerEvents(
-                new TridentListener(combatManager),
                 this
         );
 
@@ -44,13 +38,26 @@ public final class Combatlogout extends JavaPlugin {
                 this
         );
 
-        getCommand("combatlog").setExecutor(
-                new CombatCommand(this, combatManager)
+        getServer().getPluginManager().registerEvents(
+                new TridentListener(combatManager),
+                this
         );
+
+        if (getCommand("combatlog") != null) {
+            getCommand("combatlog").setExecutor(
+                    new CombatCommand(this, combatManager)
+            );
+        }
+
+        getLogger().info("WRN BattleCore has been enabled!");
     }
 
     @Override
     public void onDisable() {
+        getLogger().info("WRN BattleCore has been disabled!");
+    }
 
+    public CombatManager getCombatManager() {
+        return combatManager;
     }
 }
