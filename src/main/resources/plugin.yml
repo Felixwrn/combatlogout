@@ -2,7 +2,7 @@ name: CombatLogout
 version: 1.0
 Author: Felixwrn
 main: de.wrn.combatlogout.Combatlogout
-api-version: '1.21'
+api-version: '26.3'
 
 commands:
   combatlog:

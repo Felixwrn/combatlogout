@@ -1,0 +1,30 @@
+name: Publish Minecraft release
+
+on:
+  push:
+    tags: ['mc26.3*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and verify plugin
+        run: bash ./gradlew --no-daemon clean build
+      - name: Publish verified JAR and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          cd build/libs
+          test -f combatlogout-1.0-SNAPSHOT.jar
+          sha256sum combatlogout-1.0-SNAPSHOT.jar > SHA256SUMS
+          gh release create "$RELEASE_TAG" --verify-tag --prerelease --title 'CombatLogout – Minecraft 26.3' --notes-file ../../.github/release-notes-mc26.3.md combatlogout-1.0-SNAPSHOT.jar SHA256SUMS
