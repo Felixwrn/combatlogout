@@ -27,4 +27,4 @@ jobs:
           cd build/libs
           test -f combatlogout-1.0-SNAPSHOT.jar
           sha256sum combatlogout-1.0-SNAPSHOT.jar > SHA256SUMS
-          gh release create "$RELEASE_TAG" --verify-tag --prerelease --title 'CombatLogout – Minecraft 26.3' --notes-file ../../.github/release-notes-mc26.3.md combatlogout-1.0-SNAPSHOT.jar SHA256SUMS
+          gh release create "$RELEASE_TAG" --verify-tag --latest --title 'CombatLogout – Minecraft 26.3' --notes-file ../../.github/release-notes-mc26.3.md combatlogout-1.0-SNAPSHOT.jar SHA256SUMS
